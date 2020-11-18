@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Monopoly</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href = "./src/login/login.css" >
+</head>
+
+<body>
+    <div class="container">
+    
+    
+        <ul id="playerSelection">
+            <li>
+                <input type="radio" id="f-option" name="selector" checked>
+                <label for="f-option">2 Player</label>
+    
+                <div class="check"></div>
+            </li>
+    
+            <li>
+                <input type="radio" id="s-option" name="selector">
+                <label for="s-option">3 Player</label>
+    
+                <div class="check">
+                    <div class="inside"></div>
+                </div>
+            </li>
+    
+            <li>
+                <input type="radio" id="t-option" name="selector">
+                <label for="t-option">4 Player</label>
+    
+                <div class="check">
+                    <div class="inside"></div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="center">
+        <input class="button" type="button" value="Let's Go!" onclick="startGame()">
+    </div>
+
+    <script src="./src/login/login.js">
+    </script>
+</body>
+
+</html>
