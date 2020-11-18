@@ -533,7 +533,7 @@ let data = [
 // Initializing Players with 1500 Rs on domReady
 document.onreadystatechange = function () {
   if (!localStorage.getItem("playerSelection")) {
-    window.location.href = "login.html";
+    window.location.href = "index.html";
   } else{
     numberOfPalyers = +localStorage.getItem("playerSelection").split(" ")[0];
     initializePlayers();
