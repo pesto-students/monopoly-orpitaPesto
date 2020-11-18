@@ -1,5 +1,4 @@
 var ul = document.getElementById("playerSelection");
-localStorage.setItem("playerSelection", "2 Player");
 console.log(localStorage.getItem("playerSelection"));
 
 ul.onclick = function (event) {
@@ -9,5 +8,12 @@ ul.onclick = function (event) {
 };
 
 function startGame() {
+  localStorage.setItem("playerSelection", "2 Player");
   window.location.href = "game.html";
 }
+
+document.onreadystatechange = function () {
+  if (localStorage.getItem("playerSelection")) {
+    startGame();
+  }
+};
