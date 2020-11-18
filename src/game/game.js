@@ -6,7 +6,7 @@ let sum = 0;
 let playerdiff = 10;
 const turn = document.getElementById("turn");
 const positionObject = {};
-const numberOfPalyers = +localStorage.getItem("playerSelection").split(" ")[0];
+let numberOfPalyers = 2;
 let previousSum = {};
 let data = [
   {
@@ -532,7 +532,13 @@ let data = [
 ];
 // Initializing Players with 1500 Rs on domReady
 document.onreadystatechange = function () {
-  initializePlayers();
+  if (!localStorage.getItem("playerSelection")) {
+    window.location.href = "login.html";
+  } else{
+    numberOfPalyers = +localStorage.getItem("playerSelection").split(" ")[0];
+    initializePlayers();
+  }
+  
 };
 
 function initializePlayers() {
