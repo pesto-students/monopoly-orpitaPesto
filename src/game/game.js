@@ -8,6 +8,8 @@ const turn = document.getElementById("turn");
 const positionObject = {};
 let numberOfPalyers = 2;
 let previousSum = {};
+let bankrupt = [];
+let playerStatics = [];
 let data = [
   {
     name: "GO",
@@ -538,7 +540,17 @@ document.onreadystatechange = function () {
     numberOfPalyers = +localStorage.getItem("playerSelection").split(" ")[0];
     initializePlayers();
   }
-  
+  for(let i=0; i< data.length; i+=1) {
+    if(data[i].price !== "") {
+      const currentTd = document.getElementById(i);
+      currentTd.title = 'Price :$' + data[i].price;
+    }
+    if(data[i].pricetext !== "") {
+      const currentTd = document.getElementById(i);
+      currentTd.title =  data[i].pricetext;
+    }
+    
+  }
 };
 
 function initializePlayers() {
@@ -548,6 +560,7 @@ function initializePlayers() {
   const ul = document.getElementById("player-ul");
   ul.innerHTML = "";
   let li = "";
+  playerStatics = [];
   for (let i = 0; i < numberOfPalyers; i += 1) {
     x += 17;
     let num = i + 1 + "";
@@ -555,11 +568,13 @@ function initializePlayers() {
       x + "px";
     document.getElementsByClassName("player-" + num + "-dot")[0].style.top =
       y + "px";
-    // positionObject[num] = [];
+    playerStatics.push("<p class='p" +num+ "'> Player" + num + ': credited $' + 1500 + '</p>');
     let position = { position: 0 };
     positionObject[num] = position;
     positionObject[num]["money"] = 1500;
     positionObject[num]["property"] = { buy: [], rent: [] };
+    positionObject[num]['inJail'] = false;
+    positionObject[num]['attempt'] = 0
 
     li +=
       '<li class="player-' +
@@ -570,7 +585,13 @@ function initializePlayers() {
       positionObject[num]["money"] +
       ")</span></li>";
   }
+  document.getElementById('playerStatistics').innerHTML = '';
+  playerStatics.forEach(statistics =>{
+    document.getElementById('playerStatistics').innerHTML += statistics;
+  })
+
   ul.insertAdjacentHTML("beforeend", li);
+  
 }
 // Gets random numbers for the 2 dices and moves player as per the sum you got.
 function rollDice() {
@@ -579,81 +600,136 @@ function rollDice() {
     toggleClasses(die);
     die.dataset.roll = getRandomNumber(1, 6, index);
   });
+  document.getElementById('playerStatistics').innerHTML += '<p class="p'+playerTurn+ '" >Player' +playerTurn +'rolled dice '+ firstRoll +',' + secondRoll; 
+ 
   movePlayer();
-  if (playerTurn < numberOfPalyers) {
-    playerTurn += 1;
-  } else {
-    playerTurn = 1;
+  for(let i =0; i< numberOfPalyers; i++) {
+    debugger;
+    if(positionObject[i+1]["money"] <= 0){
+      if(bankrupt.indexOf(i+1) === -1) {
+        bankrupt.push(i+1);
+      }
+    }
   }
-
+  if(bankrupt.length > 0) {
+    if(bankrupt.length < (numberOfPalyers-1) ) {
+      bankrupt.forEach(player => {
+        while(player === playerTurn) {
+          playerTurn += 1;
+        }
+      });
+    }
+  } else{
+    if (playerTurn < numberOfPalyers) {
+      playerTurn += 1;
+    } else {
+      playerTurn = 1;
+    }
+  }
+  
+  if(bankrupt.length === numberOfPalyers -1 ){
+    document.getElementById('winner').innerText = 'Player '+ playerTurn + ' won !!!';
+    openNav();
+  }
   turn.innerHTML = "PLAYER " + playerTurn + "'s turn";
 }
 
 // Moves Player as per the dice rolled
 function movePlayer() {
-  const player = "player-" + playerTurn;
-  previousSum[playerTurn] = positionObject[playerTurn]["position"];
-  sum = firstRoll + secondRoll;
-  let item = null;
-  if (positionObject[playerTurn]["position"] + sum > 39) {
-    positionObject[playerTurn]["money"] += 200;
-    if (sum === 40) {
-      const boundingRect = element.getBoundingClientRect();
-      let x = boundingRect.x;
+    let getOutOfJailCard = false;
+    if(positionObject[playerTurn]["position"] === 30) {
+
+      positionObject[playerTurn]['inJail'] = true;
+        if(firstRoll === secondRoll) {
+            getOutOfJailCard = true;
+            document.getElementById('playerStatistics').innerHTML += '<p class="p'+playerTurn+ '" > Player' +playerTurn +'got out of Jail. Rolled doubles '; 
+
+        } else {
+          positionObject[playerTurn]['attempt'] += 1;
+          document.getElementById('playerStatistics').innerHTML += '<p class="p'+playerTurn+ '" > Player' +playerTurn +'in Jail. Rolled doubles chance ('+positionObject[playerTurn]['attempt'] +')'; 
+        }
+        if(positionObject[playerTurn]['attempt']=== 4) {
+          getOutOfJailCard = true;
+          positionObject[playerTurn]["money"] -= 50;
+          document.getElementById('playerStatistics').innerHTML += '<p class="p'+playerTurn+ '" > Player' +playerTurn +'got out of Jail. Fined $50'; 
+        }
+    }
+    if(positionObject[playerTurn]["position"] !== 30 || getOutOfJailCard){
+      const player = "player-" + playerTurn;
+      previousSum[playerTurn] = positionObject[playerTurn]["position"];
+      sum = firstRoll + secondRoll;
+      let item = null;
+      if (positionObject[playerTurn]["position"] + sum > 39) {
+        positionObject[playerTurn]["money"] += 200;
+        document.getElementById('playerStatistics').innerHTML += '<p class="p'+playerTurn+ '" > Player' +playerTurn +'crossed Go. Rewarded $200'; 
+
+        if (sum === 40) {
+          const boundingRect = element.getBoundingClientRect();
+          let x = boundingRect.x;
+          let y = boundingRect.y;
+          document.getElementsByClassName(
+            "player-" + playerTurn + "-dot"
+          )[0].style.left = x + "px";
+          document.getElementsByClassName(
+            "player-" + playerTurn + "-dot"
+          )[0].style.top = y + "px";
+          positionObject[playerTurn]["position"] = 0;
+        } else {
+          const difference = 40 - positionObject[playerTurn]["position"];
+          item = document.getElementById(sum - difference);
+          positionObject[playerTurn]["position"] = sum - difference;
+        }
+      } else {
+        positionObject[playerTurn]["position"] += sum;
+      }
+      // console.log(
+      //   "positionObject[playerTurn]",
+      //   positionObject[playerTurn]["position"]
+      // );
+      if (!item) {
+        item = document.getElementById(positionObject[playerTurn]["position"]);
+      }
+      const boundingRect = item.getBoundingClientRect();
+      let x = boundingRect.x + 30;
       let y = boundingRect.y;
-      document.getElementsByClassName(
-        "player-" + playerTurn + "-dot"
-      )[0].style.left = x + "px";
-      document.getElementsByClassName(
-        "player-" + playerTurn + "-dot"
-      )[0].style.top = y + "px";
-      positionObject[playerTurn]["position"] = 0;
-    } else {
-      const difference = 40 - positionObject[playerTurn]["position"];
-      item = document.getElementById(sum - difference);
-      positionObject[playerTurn]["position"] = sum - difference;
+      for (let i = 0; i < numberOfPalyers; i += 1) {
+        if (
+          positionObject[i + 1]["position"] ===
+          positionObject[playerTurn]["position"]
+        ) {
+          y += playerdiff * (playerTurn - 1);
+        }
+      }
+      if (
+        positionObject[playerTurn]["position"] >= 10 &&
+        positionObject[playerTurn]["position"] < 20
+      ) {
+        x = item.offsetWidth - 20;
+        document.getElementById(player).style.left = x + "px";
+        document.getElementById(player).style.top = y + "px";
+      } else if (
+        positionObject[playerTurn]["position"] >= 20 &&
+        positionObject[playerTurn]["position"] < 30
+      ) {
+          
+        y += 10;
+        x += 3;
+        if(playerTurn !== 1) {
+            y -=8;  
+        }
+        document.getElementById(player).style.left = x + "px";
+        document.getElementById(player).style.top = y + "px";
+      } else {
+        document.getElementById(player).style.left = x + "px";
+        document.getElementById(player).style.top = y + "px";
+      }
+
+      buyOrRent();
+      if(positionObject[playerTurn]["position"] === 30) {
+        positionObject[playerTurn]['inJail'] = true;
+      }
     }
-  } else {
-    positionObject[playerTurn]["position"] += sum;
-  }
-  console.log(
-    "positionObject[playerTurn]",
-    positionObject[playerTurn]["position"]
-  );
-  if (!item) {
-    item = document.getElementById(positionObject[playerTurn]["position"]);
-  }
-  const boundingRect = item.getBoundingClientRect();
-  let x = boundingRect.x + 30;
-  let y = boundingRect.y;
-  for (let i = 0; i < numberOfPalyers; i += 1) {
-    if (
-      positionObject[i + 1]["position"] ===
-      positionObject[playerTurn]["position"]
-    ) {
-      y += playerdiff * (playerTurn - 1);
-    }
-  }
-  if (
-    positionObject[playerTurn]["position"] >= 10 &&
-    positionObject[playerTurn]["position"] < 20
-  ) {
-    x = item.offsetWidth - 20;
-    document.getElementById(player).style.left = x + "px";
-    document.getElementById(player).style.top = y + "px";
-  } else if (
-    positionObject[playerTurn]["position"] >= 20 &&
-    positionObject[playerTurn]["position"] < 30
-  ) {
-    y += 20;
-    x += 3;
-    document.getElementById(player).style.left = x + "px";
-    document.getElementById(player).style.top = y + "px";
-  } else {
-    document.getElementById(player).style.left = x + "px";
-    document.getElementById(player).style.top = y + "px";
-  }
-  buyOrRent();
+  
 } // Toggles class from odd to even roll for dices
 function toggleClasses(die) {
   die.classList.toggle("odd-roll");
@@ -677,10 +753,11 @@ function getRandomNumber(min, max, index) {
 document.getElementById("roll-button").addEventListener("click", rollDice);
 
 function buyOrRent() {
+    const currentPlayer = positionObject[playerTurn];
   const onProperty = document
-    .getElementById(positionObject[playerTurn]["position"])
-    .innerHTML.trim();
-  // data.forEach(property=> {
+    .getElementById(currentPlayer["position"]).innerText.trim();
+    document.getElementById('playerStatistics').innerHTML += '<p class="p'+playerTurn+ '" > Player' +playerTurn +'is at ' + onProperty; 
+    
   for (let i = 0; i < data.length; i += 1) {
     let property = data[i];
     const reg = /^\d+$/;
@@ -689,9 +766,11 @@ function buyOrRent() {
         if (!positionObject[property.name]) {
           positionObject[playerTurn]["property"]["buy"].push(property.name);
           positionObject[playerTurn]["money"] -= property.price;
-          positionObject[property.name] = { buy: playerTurn, rent: 0 };
+          document.getElementById('playerStatistics').innerHTML += '<p class="p'+playerTurn+ '" > Player' +playerTurn +'bought ' + onProperty +' for $' + property.price;
+          document.getElementById('playerStatistics').innerHTML += '<p class="p'+playerTurn+ '" > Player' +playerTurn +'balance :' +positionObject[playerTurn]["money"];
+
+          positionObject[property.name] = { 'boughtBy': playerTurn, rent: 0 };
         } else {
-          debugger;
           if (
             positionObject[property.name]["rent"] < 6 &&
             positionObject[property.name]["boughtBy"] !== playerTurn
@@ -700,19 +779,71 @@ function buyOrRent() {
             debugger;
             const rent =
               property["rent" + positionObject[property.name]["rent"]];
-            positionObject[playerTurn]["money"] -= rent;
-            positionObject[positionObject[property.name]["boughtBy"]][
-              "money"
-            ] += rent;
+              positionObject[playerTurn]["money"] -= rent;
+            positionObject[positionObject[property.name]["boughtBy"]]["money"] += rent;
+            document.getElementById('playerStatistics').innerHTML += '<p class="p'+playerTurn+ '" >  Player' +playerTurn +' paid rent for ' + onProperty +' for $' + rent;
+            document.getElementById('playerStatistics').innerHTML += '<p class="p'+playerTurn+ '" >  Player' +playerTurn +' Balance ' + positionObject[playerTurn]["money"];
+            document.getElementById('playerStatistics').innerHTML += '<p class="p'+playerTurn+ '" >  Player' +positionObject[property.name]["boughtBy"] +'received rent for '+ onProperty + ' of ' +rent;
+            document.getElementById('playerStatistics').innerHTML += '<p class="p'+playerTurn+ '" >  Player' +positionObject[property.name]["boughtBy"] +'balance :' +positionObject[playerTurn]["money"];
+
+            const li = document.getElementsByClassName("player-" + positionObject[property.name]["boughtBy"])[0];
+            const spans = li.getElementsByTagName("span");
+            spans[0].innerHTML = "( " + positionObject[positionObject[property.name]["boughtBy"]]["money"]  + " )";
           }
         }
       }
+      console.log(property.pricetext,property.pricetext.includes('Pay') )
+      if(property.pricetext.includes('Pay')) {
+        document.getElementById('playerStatistics').innerHTML += '<p class="p'+playerTurn+ '" >  Player' +playerTurn +' paid tax for ' + onProperty +' of $' + property.pricetext.match(/\d+/g);;
+        positionObject[playerTurn]["money"] -= +property.pricetext.match(/\d+/g);
+        document.getElementById('playerStatistics').innerHTML += '<p class="p'+playerTurn+ '" >  Player' +playerTurn +' Balance ' + positionObject[playerTurn]["money"];
+      }
+      if(positionObject[playerTurn]["money"] <= 0) {
+        document.getElementById('playerStatistics').innerHTML += '<p class="p'+playerTurn+ '" >  Player' +playerTurn +' lost all his money. LOSER';
+        }
       const li = document.getElementsByClassName("player-" + playerTurn)[0];
-      var spans = li.getElementsByTagName("span");
+      const spans = li.getElementsByTagName("span");
       spans[0].innerHTML = "( " + positionObject[playerTurn]["money"] + " )";
       break;
     }
   }
-
-  // });
 }
+// openNav();
+
+
+function openNav() {
+  document.getElementById("myNav").style.width = "100%";
+}
+
+function closeNav() {
+  document.getElementById("myNav").style.width = "0%";
+}
+
+function openNav2() {
+  document.getElementById("myNavButton").style.width = "40%";
+}
+
+function closeNav2() {
+  document.getElementById("myNavButton").style.width = "0%";
+}
+function mortgage() {
+  closeNav2();
+  openNav();
+}
+
+const tabs = document.querySelectorAll('[data-tab-target]')
+const tabContents = document.querySelectorAll('[data-tab-content]')
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = document.querySelector(tab.dataset.tabTarget)
+    tabContents.forEach(tabContent => {
+      tabContent.classList.remove('active')
+    })
+    tabs.forEach(tab => {
+      tab.classList.remove('active')
+    })
+    tab.classList.add('active')
+    target.classList.add('active')
+  })
+})

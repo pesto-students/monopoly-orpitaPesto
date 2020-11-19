@@ -9,6 +9,47 @@
 </head>
 
 <body>
+    <nav id="myNavButton" class="overlay2">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav2()">&times;</a>
+        <div class="overlay-content">
+        <a href="#" class="button" onclick="giveUp()">Give Up</a>
+		<a href="#" class="button gray" class="gray" onclick="mortgage()">Mortgage</a>
+        </div>
+    </nav>
+<nav id="myNav" class="overlay">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <div class="overlay-content">
+        <div id="list"></div>
+        <p id="winner"> </p>
+
+        <!-- <ul class="tabs">
+            <li data-tab-target="#player1Tab" class="active tab">Home</li>
+            <li data-tab-target="#player2Tab" class="tab">Pricing</li>
+            <li data-tab-target="#player3Tab" class="tab">About</li>
+            <li data-tab-target="#player4Tab" class="tab">News</li>
+          </ul>
+          
+          <div class="tab-content">
+            <div id="player1Tab" data-tab-content class="active">
+              <h1>Player 1</h1>
+              <p>This is the home</p>
+            </div>
+            <div id="player2Tab" data-tab-content>
+              <h1>Player 2</h1>
+              <p>Some information on pricing</p>
+            </div>
+            <div id="player3Tab" data-tab-content>
+              <h1>Player 3</h1>
+              <p>Let me tell you about me</p>
+            </div>
+            <div id="player4Tab" data-tab-content>
+              <h1>Player 4</h1>
+              <p>News is great.</p>
+            </div>
+          </div> -->
+    </div>
+  </nav>
+  
     <div class="grid-container">
         <div id="20">
             Free Parking
@@ -135,7 +176,9 @@
                             <br/>
                             <span id="turn">PLAYER 1's turn</span>
                         </div>
-                        <div>Plat</div>
+                        <div id="playerStatistics">
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -169,13 +212,13 @@
             Short Line
         </div>
         <div id="14">
-            Verginia Avenue
+            Virginia Avenue
         </div>
         <div id="36">
             Chance
         </div>
         <div id="13">
-            State Avenue
+            States Avenue
         </div>
         <div id="37">
             Park Place
