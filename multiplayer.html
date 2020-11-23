@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MONOPOLY</title>
+    <link rel="stylesheet" href="./multiplayer.css">
+</head>
+<body>
+        
+        <button class="treat-button" onclick="multiPlayer('2Player')">2 Player</button>
+        <button class="treat-button" onclick="multiPlayer('3Player')">3 Player</button>
+        <button class="treat-button" onclick="multiPlayer('4Player')">4 Player</button>
+        <form>
+            <!-- Player 1 -->
+            <div id="player1">
+                <input type="text" name="name" class="question" autocomplete="off" placeholder="Player 1" oninput="playerName(this,1)"/>
+                <label for="player1"><span></span></label>  
+            </div>
+            
+            <br/>
+            <!-- Player 2 -->
+            <div  id="player2">
+                <input type="text" name="name" class="question" autocomplete="off" placeholder="Player 2"oninput="playerName(this,2)"/>
+                <label for="player2"><span></span></label>
+            </div>
+            
+            <br />
+            <!-- Player 3 -->
+            <div id="player3">
+                <input type="text" name="name" class="question" autocomplete="off" placeholder="Player 3" oninput="playerName(this,3)"/>
+                <label for="player3"><span></span></label>
+            </div>
+           
+            <br />
+            <!-- Player 4 -->
+            <div id="player4">
+                <input type="text" name="name" class="question" autocomplete="off" placeholder="Player 4" oninput="playerName(this,4)"/>
+                <label for="player4"><span></span></label>
+            </div>
+            
+        </form>
+        <button class="treat-button submit" onclick="submit()">Let's Play!</button>
+    <script src="./multiplayer.js"></script>
+</body>
+</html>

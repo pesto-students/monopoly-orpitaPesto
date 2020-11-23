@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MONOPOLY</title>
+    <link href='https://fonts.googleapis.com/css?family=Kalam' rel='stylesheet'>
+
+    <link rel="stylesheet" href="./monopoly.css">
+
+</head>
+
+<body>
+    <div class="noselect" style="display: inline-flex; flex-wrap:wrap;width: 100%">
+        <div class="grid-container">
+            <div class="card" id="20">
+                Free Parking
+
+            </div>
+            <div class="card" id="21">
+                Kentucky Avenue
+            </div>
+            <div class="card" id="22">
+                Chance
+            </div>
+            <div class="card" id="23">
+                Indiana Avenue
+            </div>
+            <div class="card" id="24">
+                Illinois Avenue
+            </div>
+            <div class="card" id="25">
+                B&O Railroad
+            </div>
+            <div class="card" id="26">
+                Atlantic Avenue
+            </div>
+            <div class="card" id="27">
+                Ventnor Avenue
+            </div>
+            <div class="card" id="28">
+                Water Works
+            </div>
+            <div class="card" id="29">
+                Marvin Gardens
+            </div>
+            <div class="card" id="30">
+                Go to Jail
+            </div>
+            <div class="card" id="19">
+                New York Avenue
+            </div>
+            <div class="card" id="31">
+                Pacific Avenue
+            </div>
+            <div class="card" id="18">
+                Tennessee Avenue
+            </div>
+            <div class="card" id="32">
+                North Carolina Avenue
+            </div>
+            <div class="card" id="17">
+                Community Chest
+            </div>
+            <div class="card" id="33">
+                Community Chest
+            </div>
+            <div class="card" id="16">
+                St. James Place
+            </div>
+            <div class="card" id="34">
+                Pennsylvania Avenue
+            </div>
+            <div class="card" id="15">
+                Pennsylvania Railroad
+            </div>
+            <div class="card" id="35">
+                Short Line
+            </div>
+            <div class="card" id="14">
+                Virginia Avenue
+            </div>
+            <div class="card" id="36">
+                Chance
+            </div>
+            <div class="card" id="13">
+                States Avenue
+            </div>
+            <div class="card" id="37">
+                Park Place
+            </div>
+            <div class="card" id="12">
+                Electric Company
+            </div>
+            <div class="card" id="38">
+                Luxury Tax
+            </div>
+            <div class="card" id="11">
+                St. Charles Place
+            </div>
+            <div class="card" id="39">
+                Boardwalk
+            </div>
+            <div class="card" id="10">
+                Just Visiting
+            </div>
+            <div class="card" id="9">
+                Connecticut Avenue
+            </div>
+            <div class="card" id="8">
+                Vermont Avenue
+            </div>
+            <div class="card" id="7">
+                Chance
+            </div>
+            <div class="card" id="6">
+                Oriental Avenue
+            </div>
+            <div class="card" id="5">
+                Reading Railroad
+            </div>
+            <div class="card" id="4">
+                City Tax
+            </div>
+            <div class="card" id="3">
+                Baltic Avenue
+            </div>
+            <div class="card" id="2">
+                Community Chest
+            </div>
+            <div class="card" id="1">
+                Mediterranean Avenue
+            </div>
+            <div class="card" id="0">
+                GO
+            </div>
+            <div class="Arena">
+                <div>
+                    <div id="die1" class="dice"></div>
+                    <div id="die2" class="dice"></div>
+                    <button class="treat-button" id="roll" type="button" onclick="Roll()">
+                        Let's Roll
+                    </button>
+
+                    <span>Player 1: 1500</span>
+                    <span>Player 2: 1500</span>
+                    <span></span>
+                    <span></span>
+                    <p> Player 1's turn</p>
+                </div>
+                <div>
+                    <button href="#" class="btn" id="btn_mortage" onclick="liftMortgage()" disabled>Lift Mortgage</button>
+                </div>
+                <div class="logs"></div>
+            </div>
+        </div>
+        <div class="ball b1 red"></div>
+        <div class="ball b2 blue"></div>
+        <div class="ball b3 green"></div>
+        <div class="ball b4 yellow"></div>
+        <div class="createToast">
+            <div id="snackbar"> Let's Go</div>
+        </div>
+        
+            
+        <!-- <div id="snackbar">TESTING.</div> -->
+    </div>
+    <!-- Modal -->
+    <div class="modale" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h2></h2>
+                <!-- <a href="#" class="btn-close closemodale" aria-hidden="true">&times;</a> -->
+            </div>
+            <div class="modal-body">
+                <a href="#" class="btn" id="btn_ingresar" onclick="buy()">Buy</a>
+                <a href="#" class="btn" id="btn_ingresar" onclick="exit()">Exit</a>
+            </div>
+            <!-- <div class="modal-footer">
+
+
+                <a href="#" class="btn" id="btn_ingresar">Login</a>
+            </div> -->
+        </div>
+    </div>
+
+    <div class="modale2" aria-hidden="true">
+        <!-- <div class="modal-header">
+            <h2>Mortgage</h2>
+            <a href="#" class="btn-close closemodale" aria-hidden="true">&times;</a>
+        </div> -->
+        <div class="modal-dialog">
+           <ul>
+
+           </ul>
+        </div>
+        <div class="modal-footer">
+            <button onclick="" style="display: none;">EXIT</button>
+        </div>
+    </div>
+    <div class="modale3" aria-hidden="true">
+        <div  class="modal-header"></div>
+        <!-- <div class="modal-header">
+            <h2>Lift Mortgage</h2>
+                <a href="#" class="btn-close closemodale" aria-hidden="true" onclick="closeLiftMortgage()">&times;</a>
+        </div> -->
+        <div class="modal-dialog">
+            <ul>
+    
+            </ul>
+        </div>
+        <!-- <div class="modal-footer">
+            <button onclick="closeLiftMortgage()" >EXIT</button>
+        </div> -->
+    </div>
+    <script src="./monopoly.js"></script>
+</body>
+
+</html>

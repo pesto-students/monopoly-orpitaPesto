@@ -1,0 +1,33 @@
+body {
+  overflow: hidden;
+  background: bisque;
+}
+.guy {
+  position: absolute;
+  top: 30%;
+  width: 100vw;
+  background: url("./images/running.png");
+  height: 30vh;
+  animation: walk 2s steps(10) infinite;
+}
+@keyframes walk {
+  0% {
+    background-position: 0px;
+  }
+  100% {
+    background-position: 2500px;
+  }
+}
+
+@keyframes forward {
+  0% {
+    transform: translateX(-100px);
+  }
+  100% {
+    transform: translateX(1200px);
+  }
+}
+
+/* .road {
+  border-bottom: 8px dashed black;
+} */
